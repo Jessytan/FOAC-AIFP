@@ -14,5 +14,5 @@ https://www.modelscope.cn/datasets/pp199124903/NSynth-100/summary
 
 
 ## Contact
-Yanxiong Li (eeyxli@scut.edu.cn) and Jiaxin Tan (etanjiaxin@126.com)
+Yanxiong Li (eeyxli@scut.edu.cn) and Jiaxin Tan (tanjiaxin@126.com)
 School of Electronic and Information Engineering, South China University of Technology, Guangzhou, China
