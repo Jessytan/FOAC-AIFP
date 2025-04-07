@@ -76,8 +76,7 @@ def train_parser():
     parser.add_argument("--test_query_shot", help="number of query images per class during meta-testing", type=int, default=15)
 
     parser.add_argument('--dataset', type=str, default='Nsynth',
-                        choices=['FMC', 'Nsynth',  'librispeech',
-                        'f2n', 'f2l', 'n2f', 'n2l', 'l2f', 'l2n'])
+                        choices=['FMC', 'Nsynth',  'librispeech'])
     parser.add_argument('--config', type=str, default="./default.yml") 
     parser.add_argument('--pretrain', default=False, type=bool)
     parser.add_argument('--test', default=True, type=bool)
@@ -209,11 +208,6 @@ class Train_Manager:
                         best_val_acc = result[0][0]
                         best_epoch = e+1
                         if not args.no_val:
-                            # state = {
-                            #         'params': self.model.state_dict(),
-                            #         'base_params': self.model.weight_base.state_dict(),
-                            #         'open_params': self.model.weight_base_open.state_dict()
-                            #     }
                             torch.save(model.state_dict(), save_path+'_max_acc.pth')
                         logger.info('BEST ACC!')
                     if result[1][0]>best_auroc:
@@ -426,13 +420,6 @@ def mean_confidence_interval(data, confidence=0.95):
     h = np.round(h, 3)
     return m, h
 
-def adjust_learning_rate(epoch, opt, optimizer, threshold=1e-6):
-    """Sets the learning rate to the initial LR decayed by decay rate every steep step"""
-    steps = np.sum(epoch > np.asarray(opt.lr_decay_epochs))
-    if steps > 0 and opt.lr > threshold:
-        new_lr = opt.lr * (opt.lr_decay_rate ** steps)
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = new_lr
 
 
 def calc_auroc(known_scores, unknown_scores):
@@ -464,15 +451,6 @@ def Proto(support, support_ys, query, query_label):
     pred = [proto_ys[idx] for idx in max_idx]
     return pred
 
-
-def rot_aug(x):
-    bs = x.size(0)
-    x_90 = x.transpose(2,3).flip(2)
-    x_180 = x.flip(2).flip(3)
-    x_270 = x.flip(2).transpose(2,3)
-    rot_data = torch.cat((x, x_90, x_180, x_270),0)
-    rot_label = torch.cat((torch.zeros(bs),torch.ones(bs),2*torch.ones(bs),3*torch.ones(bs)))
-    return rot_data, rot_label
 
 def calc_fscore(known, unknown):
     known=np.array(known)

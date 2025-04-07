@@ -4,7 +4,6 @@ from trainers import Pretrainer, C2_Net_train
 from models.Network import My_Net
 from datasets import dataloaders
 from utils.util import *
-from utils.utils import set_seed
 import torch
 import yaml
 import argparse

@@ -1,10 +1,4 @@
 import os
-import os.path as osp
-import re
-import json
-import time
-import h5py
-from matplotlib.font_manager import json_dump
 import numpy as np
 import random
 import librosa
@@ -16,7 +10,7 @@ import torchaudio
 from torchvision import transforms
 import pandas as pd
 from torchlibrosa.stft import Spectrogram, LogmelFilterBank
-from torchlibrosa.augmentation import SpecAugmentation
+
 
 
 class Openfmc(Dataset):
