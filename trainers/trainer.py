@@ -54,20 +54,18 @@ def train_parser():
     parser.add_argument("--opt", help="optimizer", choices=['adam','sgd'], default='sgd')
     parser.add_argument("--lr", help="initial learning rate", type=float, default=0.001)
     parser.add_argument("--gamma", help="learning rate cut scalar", type=float, default=0.1)
-    parser.add_argument("--epoch", help="number of epochs before lr is cut by gamma", type=int, default=20)
+    parser.add_argument("--epoch", help="number of epochs before lr is cut by gamma", type=int, default=50)
     parser.add_argument("--weight_decay", help="weight decay for optimizer", type=float, default=5e-4)
     parser.add_argument("--seed", help="random seed", type=int, default=42)
     parser.add_argument("--val_epoch", help="number of epochs before eval on val", type=int, default=1)
     parser.add_argument("--resnet", help="whether use resnet12 as backbone or not", default = True)
     parser.add_argument('--restype', type=str, default='ResNet12', help='Network Structure')
     parser.add_argument("--nesterov", help="nesterov for sgd", action="store_true")
-    parser.add_argument("--batch_size", help="batch size used during pre-training", type=int,default=64)
     parser.add_argument('--decay_epoch', help='epochs that cut lr', default='10')
-    parser.add_argument('--lr_decay_epochs', type=str, default='15,55', help='where to decay lr, can be a list')
+    parser.add_argument('--lr_decay_epochs', type=str, default='15,35', help='where to decay lr, can be a list')
     parser.add_argument('--lr_decay_rate', type=float, default=0.1, help='decay rate for learning rate')
 
-    parser.add_argument("--pre", help="whether use pre-resized 84x84 images for val and test", action="store_true")
-    parser.add_argument("--no_val", help="don't use validation set, just save model at final timestep", action="store_true")
+
     parser.add_argument("--train_way", help="training way", type=int,default=5)
     parser.add_argument("--test_way", help="test way", type=int, default=5)
     parser.add_argument("--train_shot", help="number of support images per class for meta-training and meta-testing during validation", type=int)
@@ -81,8 +79,7 @@ def train_parser():
     parser.add_argument('--pretrain', default=False, type=bool)
     parser.add_argument('--test', default=True, type=bool)
     parser.add_argument("--alpha", type=float, default=0.5)
-    parser.add_argument('--dataroot', type=str, default="/data/datasets/The_NSynth_Dataset/")#librispeech_fscil The_NSynth_Dataset #FSD-MIX-CLIPS-for_FSCIL/FSD-MIX-CLIPS_data  
-    parser.add_argument('--data_root', type=str, default='/data/datasets', help='path to data root')
+    parser.add_argument('--dataroot', type=str, default="/data/datasets/The_NSynth_Dataset/")
     parser.add_argument("--finetune", help="whether use resnet12 as backbone or not", default = False)
     parser.add_argument('--open_weight_sum_cali', type=float, default=0.5)
 
@@ -425,7 +422,7 @@ def mean_confidence_interval(data, confidence=0.95):
 def calc_auroc(known_scores, unknown_scores):
     y_true = np.array([1] * len(known_scores) + [0] * len(unknown_scores))
     y_score = np.concatenate([known_scores, unknown_scores])
-    y_pred = np.where(y_score >= np.sort(y_score)[75], 1, 0) #不是1way要改成75
+    y_pred = np.where(y_score >= np.sort(y_score)[75], 1, 0) 
     fpr, tpr, thresholds = roc_curve(y_true, y_score)
     fpr95 = float(interpolate.interp1d(tpr, fpr)(0.95))
     auc_pr = average_precision_score(y_true, y_score)
