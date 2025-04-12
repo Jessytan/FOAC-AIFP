@@ -9,7 +9,7 @@ from speechbrain.processing.features import STFT, Filterbank
 import torch.nn.functional as F
 from torch.nn import NLLLoss
 from .module.transformer import OpenSetGenerater,TransformerEncoder
-from .backbones.resnet18_encoder import resnet18
+from .module.resnet18_encoder import resnet18
 
 
 class Backbone(nn.Module):
